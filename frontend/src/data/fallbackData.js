@@ -45,8 +45,8 @@ export const fallbackProfile = {
   ],
   skills: [
     { id: 1, category_name: 'Languages', skills: ['Python', 'JavaScript', 'C', 'C++', 'HTML', 'CSS'] },
-    { id: 2, category_name: 'Frameworks & Libraries', skills: ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'TensorFlow', 'Keras', 'Hugging Face Transformers', 'Socket.io'] },
-    { id: 3, category_name: 'Developer Tools', skills: ['Git', 'GitHub', 'Docker', 'VS Code', 'IntelliJ'] },
+    { id: 2, category_name: 'Frameworks & Libraries', skills: ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'TensorFlow', 'Socket.io'] },
+    { id: 3, category_name: 'Developer Tools', skills: ['Git', 'GitHub', 'Docker', 'VS Code'] },
     { id: 4, category_name: 'Databases & Cloud', skills: ['MongoDB', 'Firebase', 'MySQL'] },
   ],
 };

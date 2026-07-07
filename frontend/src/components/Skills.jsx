@@ -14,14 +14,11 @@ const SKILL_META = {
   'Express.js': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', bg: 'rgba(136,136,136,0.08)', level: 'Intermediate', score: 4 },
   'PyTorch': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg', bg: 'rgba(238,76,44,0.08)', level: 'Advanced', score: 4 },
   'TensorFlow': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg', bg: 'rgba(255,111,0,0.08)', level: 'Intermediate', score: 4 },
-  'Keras': { icon: 'https://cdn.worldvectorlogo.com/logos/keras.svg', bg: 'rgba(212,0,0,0.06)', level: 'Intermediate', score: 3 },
-  'Hugging Face Transformers': { icon: 'https://cdn.worldvectorlogo.com/logos/hugging-face.svg', bg: 'rgba(255,217,0,0.08)', level: 'Intermediate', score: 4 },
   'Socket.io': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/socketio/socketio-original.svg', bg: 'rgba(1,1,1,0.08)', level: 'Intermediate', score: 3 },
   'Git': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', bg: 'rgba(240,80,50,0.08)', level: 'Advanced', score: 4 },
   'GitHub': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', bg: 'rgba(255,255,255,0.08)', level: 'Advanced', score: 4 },
   'Docker': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', bg: 'rgba(36,150,223,0.08)', level: 'Intermediate', score: 3 },
   'VS Code': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg', bg: 'rgba(0,122,204,0.08)', level: 'Advanced', score: 5 },
-  'IntelliJ': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/intellij/intellij-original.svg', bg: 'rgba(254,40,81,0.08)', level: 'Intermediate', score: 3 },
   'MongoDB': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', bg: 'rgba(71,162,72,0.08)', level: 'Intermediate', score: 4 },
   'Firebase': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg', bg: 'rgba(255,202,40,0.08)', level: 'Intermediate', score: 3 },
   'MySQL': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', bg: 'rgba(0,117,143,0.08)', level: 'Intermediate', score: 4 }
@@ -92,18 +89,17 @@ export default function Skills({ skills = [], achievements = [] }) {
         ))}
       </div>
 
-      {/* Skills Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-16">
         {filteredSkills.map((s, idx) => (
           <div
             key={idx}
-            className="group/card flex flex-col items-center gap-3.5 p-5 border border-line bg-panel/30 hover:border-blue hover:shadow-[0_0_15px_rgba(42,92,219,0.08)] transition-all duration-300 cursor-default relative overflow-hidden"
+            className="group/card flex flex-col items-center gap-3.5 p-5 border border-line bg-panel rounded-xl hover:border-blue hover:shadow-[0_8px_25px_rgba(59,130,246,0.12)] hover:-translate-y-0.5 transition-all duration-300 cursor-default relative overflow-hidden shadow-sm"
           >
             {/* Top border accent line on hover */}
             <div className="absolute top-0 left-0 w-full h-[2px] bg-blue origin-left scale-x-0 group-hover/card:scale-x-100 transition-transform duration-300"></div>
 
             <div
-              className="flex items-center justify-center w-12 h-12 border border-line/50 p-2.5 transition-transform duration-300 group-hover/card:scale-110"
+              className="flex items-center justify-center w-12 h-12 border border-line/50 p-2.5 rounded-lg transition-transform duration-300 group-hover/card:scale-110 bg-[#0a0e17]/10"
               style={{ backgroundColor: s.bg }}
             >
               <img

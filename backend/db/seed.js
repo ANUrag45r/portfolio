@@ -138,8 +138,8 @@ async function seed() {
     console.log('Inserting skills...');
     const categories = [
       ['Languages', ['Python', 'JavaScript', 'C', 'C++', 'HTML', 'CSS']],
-      ['Frameworks & Libraries', ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'TensorFlow', 'Keras', 'Hugging Face Transformers', 'Socket.io']],
-      ['Developer Tools', ['Git', 'GitHub', 'Docker', 'VS Code', 'IntelliJ']],
+      ['Frameworks & Libraries', ['React.js', 'Node.js', 'Express.js', 'PyTorch', 'TensorFlow', 'Socket.io']],
+      ['Developer Tools', ['Git', 'GitHub', 'Docker', 'VS Code']],
       ['Databases & Cloud', ['MongoDB', 'Firebase', 'MySQL']]
     ];
     let catOrder = 1;
