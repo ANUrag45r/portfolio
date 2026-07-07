@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Logo mapping for fallback data
+// Public high-quality vector logo URLs
 const LOGO_MAPPING = {
   'Accenture': 'https://cdn.worldvectorlogo.com/logos/accenture-4.svg',
   'Motilal Nehru College, Delhi University': null
 };
 
 export default function Experience({ experience = [], accordionMode = true }) {
-  // Store open card state
-  const [openCards, setOpenCards] = useState({ 1: true }); // Card 1 open by default
+  const [openCards, setOpenCards] = useState({ 1: true }); // Accenture open by default
 
   const handleToggle = (id) => {
     setOpenCards((prev) => {
@@ -21,7 +20,6 @@ export default function Experience({ experience = [], accordionMode = true }) {
     });
   };
 
-  // Map the experience array to inject logo urls
   const normalizedExperiences = experience.map(exp => ({
     ...exp,
     logoUrl: LOGO_MAPPING[exp.organization] || exp.logoUrl || null
@@ -101,7 +99,7 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
       setIsIntroRunning(true);
       const timer = setTimeout(() => {
         setIsIntroRunning(false);
-      }, 550); // matching logo landing duration
+      }, 500); // duration of the centered logo reveal
       return () => clearTimeout(timer);
     } else {
       setIsIntroRunning(false);
@@ -119,21 +117,21 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
     <motion.div 
       layout
       onClick={!isOpen ? onToggle : undefined}
-      className={`relative border border-line/60 bg-[#0d121f]/40 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 shadow-sm cursor-pointer overflow-hidden ${
-        isOpen ? 'cursor-default border-blue/30 bg-[#0d121f]/80 shadow-[0_4px_30px_rgba(0,0,0,0.15)]' : 'hover:border-blue/40 hover:bg-[#0d121f]/60 hover:shadow-[0_4px_20px_rgba(42,92,219,0.06)]'
+      className={`relative border border-line/60 bg-[#0d121f]/45 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 shadow-sm cursor-pointer overflow-hidden ${
+        isOpen ? 'cursor-default border-blue/30 bg-[#0d121f]/80 shadow-[0_4px_30px_rgba(0,0,0,0.15)]' : 'hover:border-blue/45 hover:bg-[#0d121f]/65 hover:shadow-[0_4px_20px_rgba(42,92,219,0.06)]'
       }`}
     >
-      {/* Centered logo reveal landing stage overlay */}
+      {/* Centered logo reveal landing overlay */}
       <AnimatePresence>
-        {isIntroRunning && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e17]/95 backdrop-blur-[2px] z-20 pointer-events-none">
+        {isOpen && isIntroRunning && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e17]/85 backdrop-blur-[1px] z-20 pointer-events-none">
             <motion.div
               layoutId={`logo-${experience.id}`}
-              className="w-24 h-24 rounded-2xl bg-blue/10 border-2 border-blue/40 shadow-[0_0_40px_rgba(42,92,219,0.25)] flex items-center justify-center p-3 backdrop-blur-sm"
-              initial={{ scale: 1.35, opacity: 0 }}
+              className="w-24 h-24 rounded-2xl bg-[#141b2e] border-2 border-blue/40 shadow-[0_0_40px_rgba(42,92,219,0.3)] flex items-center justify-center p-3"
+              initial={{ scale: 1.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
               {experience.logoUrl ? (
                 <img 
@@ -169,31 +167,35 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
       )}
 
       {/* Expanded Card State */}
-      {isOpen && !isIntroRunning && (
+      {isOpen && (
         <div>
-          {/* Header Row */}
+          {/* Header Row - Instantly visible to avoid blank spaces */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-4">
               
-              {/* Shrunk small badge logo position */}
-              <motion.div
-                layoutId={`logo-${experience.id}`}
-                className="w-10 h-10 rounded-lg bg-blue/10 border border-blue/30 flex items-center justify-center shrink-0"
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {experience.logoUrl ? (
-                  <img 
-                    src={experience.logoUrl} 
-                    alt={experience.organization} 
-                    className="w-7 h-7 object-contain" 
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <span className="text-xs font-extrabold text-blue font-mono">{initials}</span>
+              {/* Logo container (acts as target placeholder during morphing) */}
+              <div className="w-10 h-10 rounded-lg bg-blue/10 border border-blue/30 flex items-center justify-center shrink-0">
+                {!isIntroRunning && (
+                  <motion.div
+                    layoutId={`logo-${experience.id}`}
+                    className="w-full h-full rounded-lg flex items-center justify-center"
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {experience.logoUrl ? (
+                      <img 
+                        src={experience.logoUrl} 
+                        alt={experience.organization} 
+                        className="w-7 h-7 object-contain" 
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <span className="text-xs font-extrabold text-blue font-mono">{initials}</span>
+                    )}
+                  </motion.div>
                 )}
-              </motion.div>
+              </div>
               
               <div>
                 <h4 className="font-serif text-lg text-ink font-bold leading-tight">{experience.role}</h4>
@@ -201,7 +203,7 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
               </div>
             </div>
 
-            {/* Close trigger button */}
+            {/* Close button */}
             <button 
               onClick={(e) => {
                 e.stopPropagation();
@@ -213,40 +215,43 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
             </button>
           </div>
 
-          {/* Details & bullets wrapper */}
-          <div className="mt-6 pl-0 sm:pl-[56px]">
+          {/* Details & bullets wrapper - mounts and staggers in after the intro finishes */}
+          <div className="mt-6 pl-0 sm:pl-[56px] min-h-[80px]">
             <p className="font-mono text-[9px] text-slate/40 mb-4">{experience.start_date} — {experience.end_date}</p>
             
-            {/* Staggered text reveals */}
-            <motion.ul
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: { staggerChildren: 0.08 }
-                }
-              }}
-              initial="hidden"
-              animate="visible"
-              className="space-y-3"
-            >
-              {experience.bullets.map((bullet, idx) => (
-                <motion.li
-                  key={idx}
+            <AnimatePresence>
+              {!isIntroRunning && (
+                <motion.ul
                   variants={{
-                    hidden: { opacity: 0, y: 15 },
-                    visible: { 
-                      opacity: 1, 
-                      y: 0,
-                      transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+                    hidden: {},
+                    visible: {
+                      transition: { staggerChildren: 0.08 }
                     }
                   }}
-                  className="text-xs md:text-sm text-ink/80 font-sans leading-relaxed flex gap-2.5 items-start"
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-3"
                 >
-                  <span className="text-amber font-mono font-bold shrink-0">→</span>
-                  <span>{bullet}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
+                  {experience.bullets.map((bullet, idx) => (
+                    <motion.li
+                      key={idx}
+                      variants={{
+                        hidden: { opacity: 0, y: 15 },
+                        visible: { 
+                          opacity: 1, 
+                          y: 0,
+                          transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+                        }
+                      }}
+                      className="text-xs md:text-sm text-ink/80 font-sans leading-relaxed flex gap-2.5 items-start"
+                    >
+                      <span className="text-amber font-mono font-bold shrink-0">→</span>
+                      <span>{bullet}</span>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       )}
