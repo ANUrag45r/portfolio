@@ -1,33 +1,18 @@
-import { useState, useEffect } from 'react';
-import { fetchGithubStats } from '../api.js';
+import { useState } from 'react';
 
 export default function Hero({ profile }) {
   const p = profile || {};
-  const [githubCount, setGithubCount] = useState('1,100+');
-
-  // Load real-time commit counts from backend on mount
-  useEffect(() => {
-    fetchGithubStats()
-      .then((data) => {
-        if (data.success && data.contributions) {
-          setGithubCount(data.contributions.toLocaleString() + '+');
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to load live GitHub statistics in Hero:', err);
-      });
-  }, []);
 
   return (
     <section 
       id="top" 
-      className="max-w-[850px] mx-auto px-6 md:px-16 pt-32 pb-20 grid lg:grid-cols-[1.1fr_1fr] gap-12 items-center min-h-[90vh] relative select-none"
+      className="max-w-[1200px] mx-auto px-6 md:px-16 pt-32 pb-20 grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center min-h-[90vh] relative select-none"
     >
       
       {/* Left Column: Stats, Greeting, Taglines, Socials, Status */}
       <div className="flex flex-col justify-between py-4 z-10 h-full">
         <div>
-          {/* Top Left Stats (matching mayankcodes.dev visual layouts) */}
+          {/* Top Left Stats */}
           <div className="flex gap-8 mb-8 select-none">
             <div className="flex flex-col">
               <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-ink leading-none">
@@ -35,17 +20,6 @@ export default function Hero({ profile }) {
               </span>
               <span className="text-[9px] font-mono text-slate/60 uppercase tracking-wider mt-2.5">
                 DSA Solved
-              </span>
-            </div>
-            
-            <div className="w-[1px] h-10 bg-line/60 self-center"></div>
-
-            <div className="flex flex-col">
-              <span className="text-3xl md:text-4xl font-extrabold tracking-tight text-blue leading-none">
-                {githubCount}
-              </span>
-              <span className="text-[9px] font-mono text-slate/60 uppercase tracking-wider mt-2.5">
-                Git Commits
               </span>
             </div>
           </div>
