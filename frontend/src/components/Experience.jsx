@@ -30,16 +30,7 @@ export default function Experience({ experience = [], accordionMode = true }) {
       id="experience" 
       className="relative w-full bg-[#0a0e17] bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] border-y border-line/30 py-24 select-none"
     >
-      <div className="max-w-[1000px] mx-auto px-6 md:px-16 grid grid-cols-1 md:grid-cols-[60px_1fr] gap-6 relative">
-        
-        {/* Left vertical rotated sidebar text */}
-        <div className="hidden md:flex flex-col items-center justify-start pt-2 select-none font-mono">
-          <span className="uppercase tracking-[0.3em] rotate-180 whitespace-nowrap text-slate/30 text-[9px] font-extrabold [writing-mode:vertical-lr] text-center">
-            AI/ML &amp; FULL-STACK ENGINEER
-          </span>
-          <div className="w-[1px] h-24 bg-blue/20 mt-6"></div>
-        </div>
-
+      <div className="max-w-[850px] mx-auto px-6 md:px-16 relative">
         {/* Main Content Area */}
         <div>
           {/* Header Row */}
