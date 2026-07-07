@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: #F4F6F3;
+  --color-ink: #101820;
+  --color-slate: #4C5B6B;
+  --color-line: #D8DED9;
+  --color-blue: #2A5CDB;
+  --color-amber: #D98A2B;
+  --color-panel: #EAEEE7;
+  --bg-grid: #DEE4DA;
+}
+
+:root.dark {
+  --color-paper: #0F141C;
+  --color-ink: #F4F6F3;
+  --color-slate: #8C9DAE;
+  --color-line: #262F3D;
+  --color-blue: #3B82F6;
+  --color-amber: #F59E0B;
+  --color-panel: #182230;
+  --bg-grid: #1D2633;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.dash-flow {
+  stroke-dasharray: 6 6;
+  animation: dashmove 1.4s linear infinite;
+}
+@keyframes dashmove {
+  to { stroke-dashoffset: -24; }
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-blue);
+  color: var(--color-paper);
+}
+
+/* 3D Flip Card Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Animated Timeline Node Hover Effects */
+.timeline-node {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.timeline-node:hover {
+  transform: translate(2px, -2px);
+}
+.timeline-node rect {
+  transition: stroke 0.25s ease, fill 0.25s ease, stroke-width 0.25s ease;
+}
+.timeline-node:hover rect {
+  stroke: var(--color-blue);
+  stroke-width: 1.5;
+  fill: var(--color-panel);
+}
+.timeline-node-future {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.timeline-node-future:hover {
+  transform: translate(2px, -2px);
+}
+.timeline-node-future rect {
+  transition: stroke 0.25s ease, fill 0.25s ease, stroke-width 0.25s ease;
+}
+.timeline-node-future:hover rect {
+  stroke: var(--color-amber);
+  stroke-width: 1.5;
+  fill: var(--color-panel);
+}
+.timeline-node:hover text.node-title {
+  fill: var(--color-blue);
+  transition: fill 0.25s ease;
+}
+.timeline-node-future:hover text.node-title {
+  fill: var(--color-amber);
+  transition: fill 0.25s ease;
+}
+
+/* Streaming flow animation for timeline data */
+.dash-flow-fast {
+  stroke-dasharray: 6 4;
+  animation: dashmove 0.8s linear infinite;
+}
+
+/* Splash Screen Animation Keyframes */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes progressBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
