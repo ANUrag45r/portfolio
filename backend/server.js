@@ -7,6 +7,7 @@ import profileRoutes from './routes/profile.js';
 import projectsRoutes from './routes/projects.js';
 import contactRoutes from './routes/contact.js';
 import skillsRoutes from './routes/skills.js';
+import activityRoutes from './routes/activity.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/projects', projectsRoutes);
 app.use('/api/skills', skillsRoutes);
 app.use('/api/contact', contactLimiter, contactRoutes);
+app.use('/api', activityRoutes);
 
 app.get('/api/github-stats', async (req, res) => {
   try {

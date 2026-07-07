@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SectionHeading from './SectionHeading.jsx';
-import { fetchGithubStats } from '../api.js';
+import DevActivity from './DevActivity/DevActivity.jsx';
 
 const SKILL_META = {
   'Python': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', bg: 'rgba(55,115,165,0.08)', level: 'Advanced', score: 5 },
@@ -29,20 +29,6 @@ const SKILL_META = {
 
 export default function Skills({ skills = [], achievements = [] }) {
   const [activeTab, setActiveTab] = useState('all');
-  const [githubCount, setGithubCount] = useState('1,100+');
-
-  // Load real-time commit counts from backend on mount
-  useEffect(() => {
-    fetchGithubStats()
-      .then((data) => {
-        if (data.success && data.contributions) {
-          setGithubCount(data.contributions);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to load live GitHub statistics:', err);
-      });
-  }, []);
 
   const categories = [
     { tag: 'all', label: '⭐ Core' },
@@ -159,114 +145,7 @@ export default function Skills({ skills = [], achievements = [] }) {
           Daily active monitoring of code commits and platform problem solving. Live integrations mapped from GitHub and LeetCode.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* GitHub widget */}
-          <div className="border border-line bg-panel/30 p-5 rounded-xl flex flex-col justify-between hover:border-blue/50 transition-all duration-300 shadow-sm">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-[9px] text-slate font-bold tracking-widest uppercase">GITHUB CONTRIBUTIONS</span>
-                <span className="text-[9px] font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 border border-emerald-500/20">ACTIVE</span>
-              </div>
-              
-              {/* Real-time GitHub Contribution Chart Image (Scrollbar hidden) */}
-              <div className="overflow-x-auto pb-4 scrollbar-none select-none flex justify-center">
-                <img 
-                  src="https://ghchart.rshah.org/40c463/ANUrag45r" 
-                  alt="Anurag Sinha's Real-time GitHub Contributions"
-                  className="h-[105px] min-w-[500px] object-contain filter invert-0 dark:brightness-110"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="border-t border-line/40 pt-4 flex items-center justify-between mt-4">
-              <div className="flex items-baseline gap-2">
-                <span className="font-mono text-sm font-extrabold text-ink tracking-wider uppercase">GITHUB</span>
-                <span className="text-[10px] text-slate font-mono">({githubCount} commits)</span>
-                <a 
-                  href="https://github.com/ANUrag45r" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-[10px] text-blue hover:underline font-mono font-bold ml-1"
-                >
-                  Profile →
-                </a>
-              </div>
-
-              {/* GitHub Legend matching 2nd image */}
-              <div className="flex items-center gap-1 font-mono text-[9px] text-slate select-none">
-                <span>Less</span>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-line/20"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-[#c6e48b]"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-[#7bc96f]"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-[#239a3b]"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-[#196127]"></div>
-                <span>More</span>
-              </div>
-            </div>
-          </div>
-
-          {/* LeetCode widget */}
-          <div className="border border-line bg-panel/30 p-5 rounded-xl flex flex-col justify-between hover:border-amber/50 transition-all duration-300 shadow-sm">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-[9px] text-slate font-bold tracking-widest uppercase">LEETCODE SUBMISSIONS</span>
-                <span className="text-[9px] font-mono text-amber bg-amber/10 px-2 py-0.5 border border-amber/20">SOLVED</span>
-              </div>
-              
-              {/* Submission Grid (Scrollbar hidden) */}
-              <div className="flex gap-[3px] overflow-x-auto pb-4 scrollbar-none select-none justify-center">
-                {Array.from({ length: 30 }).map((_, colIdx) => (
-                  <div key={colIdx} className="flex flex-col gap-[3px] shrink-0">
-                    {Array.from({ length: 7 }).map((_, rowIdx) => {
-                      const rand = Math.random();
-                      let bgClass = 'bg-line/20'; 
-                      if (rand > 0.88) bgClass = 'bg-amber-600'; 
-                      else if (rand > 0.72) bgClass = 'bg-amber-500'; 
-                      else if (rand > 0.5) bgClass = 'bg-amber-400/60'; 
-                      else if (rand > 0.35) bgClass = 'bg-amber-300/30'; 
-                      
-                      return (
-                        <div 
-                          key={rowIdx} 
-                          className={`w-[8px] h-[8px] rounded-[1px] ${bgClass}`}
-                        ></div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-line/40 pt-4 flex items-center justify-between mt-4">
-              <div className="flex items-baseline gap-2">
-                <span className="font-mono text-sm font-extrabold text-ink tracking-wider uppercase">LEETCODE</span>
-                <span className="text-[10px] text-slate font-mono">(500+ solved)</span>
-                <a 
-                  href="https://leetcode.com/u/anurag_sinha_hu/" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-[10px] text-amber hover:underline font-mono font-bold ml-1"
-                >
-                  LC →
-                </a>
-              </div>
-
-              {/* LeetCode Legend matching 2nd image */}
-              <div className="flex items-center gap-1 font-mono text-[9px] text-slate select-none">
-                <span>Less</span>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-line/20"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-amber-300/30"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-amber-400/60"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-amber-500"></div>
-                <div className="w-[8px] h-[8px] rounded-[1.5px] bg-amber-600"></div>
-                <span>More</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DevActivity />
       </div>
 
       {/* Achievement Log */}
