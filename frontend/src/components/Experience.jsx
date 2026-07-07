@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Public high-quality vector logo URLs
+// High-quality public brand vector logo mapping
 const LOGO_MAPPING = {
-  'Accenture': 'https://cdn.worldvectorlogo.com/logos/accenture-4.svg',
+  'Accenture': 'https://cdn.simpleicons.org/accenture',
   'Motilal Nehru College, Delhi University': null
 };
 
@@ -93,6 +93,7 @@ export default function Experience({ experience = [], accordionMode = true }) {
 
 function ExperienceCard({ experience, isOpen, onToggle }) {
   const [isIntroRunning, setIsIntroRunning] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -133,14 +134,12 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              {experience.logoUrl ? (
+              {experience.logoUrl && !logoFailed ? (
                 <img 
                   src={experience.logoUrl} 
                   alt={experience.organization} 
                   className="w-16 h-16 object-contain" 
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
+                  onError={() => setLogoFailed(true)}
                 />
               ) : (
                 <span className="text-xl font-extrabold text-blue font-mono text-center leading-none">
@@ -181,14 +180,12 @@ function ExperienceCard({ experience, isOpen, onToggle }) {
                     className="w-full h-full rounded-lg flex items-center justify-center"
                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {experience.logoUrl ? (
+                    {experience.logoUrl && !logoFailed ? (
                       <img 
                         src={experience.logoUrl} 
                         alt={experience.organization} 
                         className="w-7 h-7 object-contain" 
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
+                        onError={() => setLogoFailed(true)}
                       />
                     ) : (
                       <span className="text-xs font-extrabold text-blue font-mono">{initials}</span>
