@@ -86,14 +86,14 @@
 
 .monthLabel {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   fill: var(--color-slate);
   opacity: 0.8;
 }
 
 .dayLabel {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   fill: var(--color-slate);
   opacity: 0.6;
 }

@@ -90,10 +90,10 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
   };
 
   // Grid coordinates math
-  const boxSize = 9;
-  const gap = 2.5;
-  const leftPadding = 30;
-  const topPadding = 20;
+  const boxSize = 11.5;
+  const gap = 3.2;
+  const leftPadding = 35;
+  const topPadding = 25;
 
   return (
     <div className={styles.card} ref={containerRef}>
@@ -117,7 +117,7 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
             <text
               key={idx}
               x={leftPadding + lbl.colIdx * (boxSize + gap)}
-              y={12}
+              y={15}
               className={styles.monthLabel}
             >
               {lbl.name}
@@ -125,9 +125,9 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
           ))}
 
           {/* Weekday labels */}
-          <text x={5} y={topPadding + 1.5 * (boxSize + gap)} className={styles.dayLabel}>Mon</text>
-          <text x={5} y={topPadding + 3.5 * (boxSize + gap)} className={styles.dayLabel}>Wed</text>
-          <text x={5} y={topPadding + 5.5 * (boxSize + gap)} className={styles.dayLabel}>Fri</text>
+          <text x={6} y={topPadding + 1.2 * (boxSize + gap)} className={styles.dayLabel}>Mon</text>
+          <text x={6} y={topPadding + 3.2 * (boxSize + gap)} className={styles.dayLabel}>Wed</text>
+          <text x={6} y={topPadding + 5.2 * (boxSize + gap)} className={styles.dayLabel}>Fri</text>
 
           {/* Grid columns */}
           {weeks.map((week, colIdx) => (
