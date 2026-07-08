@@ -32,8 +32,27 @@ router.get('/', async (req, res) => {
         gfg_url: profileDoc.gfg_url,
         cgpa: profileDoc.cgpa
       },
-      education: (profileDoc.education || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
-      experience: (profileDoc.experience || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
+      education: (profileDoc.education || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map(e => ({
+        id: e.display_order || e._id,
+        institution: e.institution,
+        degree: e.degree,
+        score: e.score,
+        start_date: e.start_date,
+        end_date: e.end_date,
+        display_order: e.display_order
+      })),
+      experience: (profileDoc.experience || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map(e => ({
+        id: e.display_order || e._id,
+        role: e.role,
+        organization: e.organization,
+        location: e.location,
+        logo_url: e.logo_url,
+        start_date: e.start_date,
+        end_date: e.end_date,
+        bullets: e.bullets,
+        metrics: e.metrics,
+        display_order: e.display_order
+      })),
       achievements: profileDoc.achievements || [],
       skills: (profileDoc.skills || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map(c => ({
         id: c._id,
