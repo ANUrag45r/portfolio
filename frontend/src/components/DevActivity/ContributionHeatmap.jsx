@@ -41,24 +41,39 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
     weeks.push(days.slice(i, i + 7));
   }
 
-  // Collect month labels based on the first day of each week
-  const monthLabels = [];
-  let prevMonth = -1;
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  // Grid coordinates math
+  const boxSize = 11.5;
+  const gap = 3.2;
+  const leftPadding = 35;
+  const topPadding = 25;
 
-  weeks.forEach((week, weekIdx) => {
+  // Calculate dynamic X coordinate for each column with month gaps
+  let currentX = leftPadding;
+  const colX = [];
+  let lastMonth = -1;
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthLabels = [];
+
+  weeks.forEach((week, colIdx) => {
+    let month = -1;
     if (week.length > 0) {
       const date = new Date(week[0].date);
-      const month = date.getMonth();
-      // Only render month if it changed and isn't squashed against the previous label
-      if (month !== prevMonth) {
-        monthLabels.push({
-          name: monthNames[month],
-          colIdx: weekIdx
-        });
-        prevMonth = month;
+      month = date.getMonth();
+      if (colIdx > 0 && month !== lastMonth) {
+        currentX += 8; // Beautiful visual gap between months!
       }
     }
+    colX.push(currentX);
+
+    if (week.length > 0 && month !== lastMonth) {
+      monthLabels.push({
+        name: monthNames[month],
+        x: currentX
+      });
+      lastMonth = month;
+    }
+    
+    currentX += boxSize + gap;
   });
 
   const formatDate = (dateStr) => {
@@ -89,12 +104,6 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
     setTooltip(prev => ({ ...prev, visible: false }));
   };
 
-  // Grid coordinates math
-  const boxSize = 11.5;
-  const gap = 3.2;
-  const leftPadding = 35;
-  const topPadding = 25;
-
   return (
     <div className={styles.card} ref={containerRef}>
       {/* Header */}
@@ -108,7 +117,7 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
       {/* SVG Scroll Container */}
       <div className={styles.scrollContainer}>
         <svg 
-          width={leftPadding + 53 * (boxSize + gap)} 
+          width={currentX + 10} 
           height={topPadding + 7 * (boxSize + gap) + 4} 
           className={styles.heatmapSvg}
         >
@@ -116,7 +125,7 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
           {monthLabels.map((lbl, idx) => (
             <text
               key={idx}
-              x={leftPadding + lbl.colIdx * (boxSize + gap)}
+              x={lbl.x}
               y={15}
               className={styles.monthLabel}
             >
@@ -131,7 +140,7 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
 
           {/* Grid columns */}
           {weeks.map((week, colIdx) => (
-            <g key={colIdx} transform={`translate(${leftPadding + colIdx * (boxSize + gap)}, ${topPadding})`}>
+            <g key={colIdx} transform={`translate(${colX[colIdx]}, ${topPadding})`}>
               {week.map((day, rowIdx) => (
                 <rect
                   key={rowIdx}
