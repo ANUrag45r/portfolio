@@ -28,16 +28,41 @@ connectDB();
 app.use(helmet({
   contentSecurityPolicy: false // Disable CSP if frontend and backend run on different ports locally
 }));
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(o => o.trim().replace(/\/$/, ''))
+  : [];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    
+    // Dynamically allow vercel.app subdomains and localhost for seamless deployment
+    if (normalizedOrigin.endsWith('.vercel.app') || normalizedOrigin.includes('localhost')) {
+      return callback(null, true);
+    }
+    
+    if (!process.env.CORS_ORIGIN || process.env.CORS_ORIGIN === '*') {
+      return callback(null, true);
+    }
+    
+    callback(null, false);
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Set up server and Socket.IO
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: process.env.CORS_ORIGIN || '*',
-    methods: ['GET', 'POST'],
-  },
+  cors: corsOptions,
 });
 
 // Expose socket instance to routes
