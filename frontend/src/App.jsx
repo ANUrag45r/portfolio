@@ -11,6 +11,7 @@ import Footer from './components/Footer.jsx';
 import DevConsole from './components/DevConsole.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import AnalyticsTracker from './components/AnalyticsTracker.jsx';
+import AnalyticsDashboard from './components/AnalyticsDashboard.jsx';
 import { fetchProfile, fetchProjects } from './api.js';
 import { fallbackProfile, fallbackProjects } from './data/fallbackData.js';
 
@@ -118,6 +119,11 @@ export default function App() {
         <Experience experience={data.experience} />
         <Projects projects={projects} />
         <Skills skills={data.skills} achievements={data.achievements} />
+        
+        <section id="analytics" className="max-w-[1200px] mx-auto px-6 md:px-10 py-16 border-t border-line/30">
+          <AnalyticsDashboard />
+        </section>
+
         <Contact profile={data.profile} />
         <Footer profile={data.profile} />
 

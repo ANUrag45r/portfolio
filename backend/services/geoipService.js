@@ -1,5 +1,4 @@
-import fetch from 'node-fetch'; // Standard node fetch API helper if node version < 18, but Node 18+ has native fetch.
-// We can use global fetch in Node 18+! Let's check: our Node version is v26.1.0, so native fetch is fully supported!
+// Node v26.1.0 supports global native fetch natively, so no external package import is required.
 
 const isPrivateIP = (ip) => {
   if (!ip) return true;

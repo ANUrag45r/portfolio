@@ -34,7 +34,7 @@ const SOCKET_URL = API_BASE.endsWith('/api') ? API_BASE.slice(0, -4) : 'http://l
 
 const CHART_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4'];
 
-export default function AnalyticsDashboard({ token, onUnauthorized }) {
+export default function AnalyticsDashboard() {
   const [range, setRange] = useState('7days');
   const [customDates, setCustomDates] = useState({ startDate: '', endDate: '' });
   const [loading, setLoading] = useState(true);
@@ -61,11 +61,6 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
     setError(null);
 
     try {
-      const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      };
-
       let queryParams = `?range=${range}`;
       if (range === 'custom') {
         if (!customDates.startDate || !customDates.endDate) {
@@ -87,11 +82,7 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
 
       const responses = await Promise.all(
         endpoints.map((ep) =>
-          fetch(`${API_BASE}/${ep}`, { headers }).then(async (res) => {
-            if (res.status === 401) {
-              onUnauthorized();
-              throw new Error('Unauthorized');
-            }
+          fetch(`${API_BASE}/${ep}`).then(async (res) => {
             if (!res.ok) throw new Error(`Failed to fetch ${ep}`);
             return res.json();
           })
@@ -106,9 +97,7 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
       setBrowsers(responses[5].data);
       setCountries(responses[6].data);
     } catch (err) {
-      if (err.message !== 'Unauthorized') {
-        setError(err.message || 'An error occurred while fetching analytics.');
-      }
+      setError(err.message || 'An error occurred while fetching analytics.');
     } finally {
       setLoading(false);
     }

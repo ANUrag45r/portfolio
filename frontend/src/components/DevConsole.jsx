@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { addProject, deleteProject, addSkill, deleteSkill } from '../api.js';
-import AnalyticsDashboard from './AnalyticsDashboard.jsx';
 
 export default function DevConsole({ profileData, projects, onRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,15 +7,6 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
   const [passcode, setPasscode] = useState('');
   const [activeTab, setActiveTab] = useState('project');
   const [statusMsg, setStatusMsg] = useState({ text: '', isError: false });
-  const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem('admin_token');
-    if (savedToken) {
-      setToken(savedToken);
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   // Project form states
   const [projectForm, setProjectForm] = useState({
@@ -48,33 +38,13 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
     setSkillForm(prev => ({ ...prev, existingCategory: categories[0].category_name }));
   }
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-  const handlePasscodeSubmit = async (e) => {
+  const handlePasscodeSubmit = (e) => {
     e.preventDefault();
-    setStatusMsg({ text: 'Verifying passcode...', isError: false });
-    try {
-      const res = await fetch(`${API_BASE}/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ passcode }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        localStorage.setItem('admin_token', data.token);
-        setToken(data.token);
-        setIsAuthenticated(true);
-        setStatusMsg({ text: 'Access granted.', isError: false });
-      } else {
-         throw new Error(data.error || 'Access denied. Invalid passcode.');
-      }
-    } catch (err) {
-      if (passcode.toLowerCase() === 'anurag') {
-        setIsAuthenticated(true);
-        setStatusMsg({ text: 'Access granted (offline mode).', isError: false });
-      } else {
-        setStatusMsg({ text: err.message || 'Access denied.', isError: true });
-      }
+    if (passcode.toLowerCase() === 'anurag') {
+      setIsAuthenticated(true);
+      setStatusMsg({ text: 'Access granted.', isError: false });
+    } else {
+      setStatusMsg({ text: 'Access denied. Invalid passphrase.', isError: true });
     }
   };
 
@@ -186,7 +156,7 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
           />
 
           {/* Drawer Body */}
-          <div className={`relative w-full ${activeTab === 'analytics' ? 'max-w-6xl' : 'max-w-lg'} bg-paper h-full shadow-2xl flex flex-col z-10 border-l border-line transition-all duration-300`}>
+          <div className="relative w-full max-w-lg bg-paper h-full shadow-2xl flex flex-col z-10 border-l border-line transition-all duration-300">
             {/* Header */}
             <div className="p-5 border-b border-line flex items-center justify-between bg-panel/30">
               <div>
@@ -236,30 +206,24 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
             ) : (
               <div className="flex-grow flex flex-col overflow-hidden">
                 {/* Tabs */}
-                <div className="flex border-b border-line bg-panel/20 font-mono text-xs overflow-x-auto">
+                <div className="flex border-b border-line bg-panel/20 font-mono text-xs">
                   <button
                     onClick={() => { setActiveTab('project'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 min-w-[70px] py-3 text-center border-r border-line transition-colors ${activeTab === 'project' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 py-3 text-center border-r border-line transition-colors ${activeTab === 'project' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     + Project
                   </button>
                   <button
                     onClick={() => { setActiveTab('skill'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 min-w-[60px] py-3 text-center border-r border-line transition-colors ${activeTab === 'skill' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 py-3 text-center border-r border-line transition-colors ${activeTab === 'skill' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     + Skill
                   </button>
                   <button
                     onClick={() => { setActiveTab('manage'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 min-w-[70px] py-3 text-center border-r border-line transition-colors ${activeTab === 'manage' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 py-3 text-center transition-colors ${activeTab === 'manage' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     Manage
-                  </button>
-                  <button
-                    onClick={() => { setActiveTab('analytics'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 min-w-[80px] py-3 text-center transition-colors ${activeTab === 'analytics' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
-                  >
-                    Analytics
                   </button>
                 </div>
 
@@ -608,18 +572,6 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
                         )}
                       </div>
                     </div>
-                  )}
-
-                  {activeTab === 'analytics' && (
-                    <AnalyticsDashboard 
-                      token={token} 
-                      onUnauthorized={() => {
-                        localStorage.removeItem('admin_token');
-                        setToken('');
-                        setIsAuthenticated(false);
-                        setStatusMsg({ text: 'Session expired. Please log in again.', isError: true });
-                      }} 
-                    />
                   )}
                 </div>
 
