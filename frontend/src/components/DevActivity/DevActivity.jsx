@@ -105,9 +105,11 @@ export default function DevActivity() {
   // Standard and Dark-optimized color scales matching both sites natively
   const githubColors = isDark
     ? ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'] // GitHub dark green
-    : ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39']; // GitHub light green
+    : ['#d2d8d3', '#9be9a8', '#40c463', '#30a14e', '#216e39']; // GitHub light green (high contrast empty days)
 
-  const leetcodeColors = ['#2d2d2d', '#0e4429', '#006d32', '#26a641', '#39d353'];
+  const leetcodeColors = isDark
+    ? ['#2d2d2d', '#0e4429', '#006d32', '#26a641', '#39d353'] // LeetCode dark green
+    : ['#d2d8d3', '#9be9a8', '#40c463', '#30a14e', '#216e39']; // LeetCode light green
 
   if (loading) {
     return (

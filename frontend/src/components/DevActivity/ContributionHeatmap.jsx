@@ -115,29 +115,29 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
 
   return (
     <div 
-      className={`${styles.card} ${isLeetcode ? '!bg-[#1a1a1a] !border-none !shadow-none' : ''}`} 
+      className={`${styles.card} ${isLeetcode ? 'dark:!bg-[#1a1a1a] dark:!border-none dark:!shadow-none' : ''}`} 
       ref={containerRef}
     >
       {/* Header */}
       {isLeetcode ? (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 text-[#cccccc] font-sans text-xs select-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 text-slate dark:text-[#cccccc] font-sans text-xs select-none">
           <div className="flex items-center gap-1.5">
-            <span className="text-lg font-bold text-white">{totalCount}</span>
-            <span className="text-[#8c8c8c]">submissions in the past one year</span>
-            <svg className="w-3.5 h-3.5 text-[#8c8c8c] cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <span className="text-lg font-bold text-ink dark:text-white">{totalCount}</span>
+            <span className="text-slate/70 dark:text-[#8c8c8c]">submissions in the past one year</span>
+            <svg className="w-3.5 h-3.5 text-slate/50 dark:text-[#8c8c8c] cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div className="flex items-center gap-5 text-[#8c8c8c]">
+          <div className="flex items-center gap-5 text-slate/70 dark:text-[#8c8c8c]">
             <div>
-              <span>Total active days:</span> <span className="text-white font-bold ml-1">{activeDays}</span>
+              <span>Total active days:</span> <span className="text-ink dark:text-white font-bold ml-1">{activeDays}</span>
             </div>
             <div>
-              <span>Max streak:</span> <span className="text-white font-bold ml-1">{maxStreak}</span>
+              <span>Max streak:</span> <span className="text-ink dark:text-white font-bold ml-1">{maxStreak}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-[#2c2c2c] hover:bg-[#363636] text-white px-3 py-1 rounded-lg border border-[#3c3c3c] cursor-pointer text-[11px] transition-colors">
+            <div className="flex items-center gap-1.5 bg-panel dark:bg-[#2c2c2c] hover:bg-panel/85 dark:hover:bg-[#363636] text-ink dark:text-white px-3 py-1 rounded-lg border border-line dark:border-[#3c3c3c] cursor-pointer text-[11px] transition-colors">
               <span>Current</span>
-              <svg className="w-3 h-3 text-[#8c8c8c]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-3 h-3 text-slate/50 dark:text-[#8c8c8c]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -165,16 +165,16 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
               key={idx}
               x={leftPadding + lbl.colIdx * (boxSize + gap)}
               y={isLeetcode ? topPadding + 7 * (boxSize + gap) + 18 : 15}
-              className={`${styles.monthLabel} ${isLeetcode ? '!fill-[#8c8c8c]' : ''}`}
+              className={`${styles.monthLabel} ${isLeetcode ? '!fill-slate/60 dark:!fill-[#8c8c8c]' : ''}`}
             >
               {lbl.name}
             </text>
           ))}
 
           {/* Weekday labels */}
-          <text x={6} y={topPadding + 1.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-[#8c8c8c]' : ''}`}>Mon</text>
-          <text x={6} y={topPadding + 3.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-[#8c8c8c]' : ''}`}>Wed</text>
-          <text x={6} y={topPadding + 5.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-[#8c8c8c]' : ''}`}>Fri</text>
+          <text x={6} y={topPadding + 1.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-slate/60 dark:!fill-[#8c8c8c]' : ''}`}>Mon</text>
+          <text x={6} y={topPadding + 3.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-slate/60 dark:!fill-[#8c8c8c]' : ''}`}>Wed</text>
+          <text x={6} y={topPadding + 5.2 * (boxSize + gap)} className={`${styles.dayLabel} ${isLeetcode ? '!fill-slate/60 dark:!fill-[#8c8c8c]' : ''}`}>Fri</text>
 
           {/* Grid columns */}
           {weeks.map((week, colIdx) => (
@@ -188,7 +188,7 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
                   fill={getColor(day.count)}
                   rx={2}
                   ry={2}
-                  className={`${styles.dayRect} ${isLeetcode ? '!stroke-none' : ''}`}
+                  className={`${styles.dayRect} ${isLeetcode ? 'dark:!stroke-none' : ''}`}
                   onMouseMove={(e) => handleMouseMove(e, day)}
                   onMouseLeave={handleMouseLeave}
                 />
@@ -201,10 +201,10 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
       {/* Footer */}
       <div className={styles.footer}>
         <div className={styles.footerLeft}>
-          <span className={`${styles.footerLabel} ${isLeetcode ? '!text-white' : ''}`}>
+          <span className={`${styles.footerLabel} ${isLeetcode ? 'text-ink dark:!text-white' : ''}`}>
             {totalCount.toLocaleString()}
           </span>
-          <span className={`${styles.footerSub} ${isLeetcode ? '!text-[#8c8c8c]' : ''}`}>
+          <span className={`${styles.footerSub} ${isLeetcode ? 'text-slate dark:!text-[#8c8c8c]' : ''}`}>
             {totalLabel}
           </span>
           {profileUrl && (
@@ -224,13 +224,13 @@ export default function ContributionHeatmap({ data, colorScale, title, totalLabe
         </div>
 
         {/* Heatmap Legend */}
-        <div className={`${styles.legend} ${isLeetcode ? '!text-[#8c8c8c]' : ''}`}>
+        <div className={`${styles.legend} ${isLeetcode ? 'text-slate dark:!text-[#8c8c8c]' : ''}`}>
           <span>Less</span>
           {colorScale.map((c, i) => (
             <div 
               key={i} 
               className={styles.legendSquare} 
-              style={{ backgroundColor: c, border: i === 0 && !isLeetcode ? '1px solid var(--color-line)' : 'none' }}
+              style={{ backgroundColor: c, border: i === 0 && (!isLeetcode || c === '#d2d8d3') ? '1px solid var(--color-line)' : 'none' }}
             ></div>
           ))}
           <span>More</span>
