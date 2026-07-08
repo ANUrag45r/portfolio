@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import 'dotenv/config';
 import rateLimit from 'express-rate-limit';
 import http from 'http';
@@ -8,7 +9,7 @@ import { Server } from 'socket.io';
 import connectDB from './config/mongodb.js';
 import profileRoutes from './routes/profile.js';
 import projectsRoutes from './routes/projects.js';
-import contactRoutes from './routes/contact.js';
+import contactRoutes from './routes/contact.routes.js';
 import skillsRoutes from './routes/skills.js';
 import activityRoutes from './routes/activity.js';
 import analyticsRoutes from './routes/analytics.js';
@@ -23,6 +24,10 @@ app.set('trust proxy', true);
 // Connect to MongoDB
 connectDB();
 
+// Apply security headers
+app.use(helmet({
+  contentSecurityPolicy: false // Disable CSP if frontend and backend run on different ports locally
+}));
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
 
@@ -101,6 +106,15 @@ app.get('/api/github-stats', async (req, res) => {
 });
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
+
+// Centralized error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled Server Error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal Server Error'
+  });
+});
 
 server.listen(PORT, () => {
   console.log(`Portfolio API running on http://localhost:${PORT}`);

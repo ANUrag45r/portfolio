@@ -1,4 +1,13 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Fix Node.js Windows SRV lookup DNS bug (querySrv ECONNREFUSED)
+dns.setDefaultResultOrder('ipv4first');
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  console.warn('Failed to set public DNS servers, falling back to system resolver:', e.message);
+}
 
 const connectDB = async () => {
   try {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { pool } from '../config/db.js';
+import Profile from '../models/Profile.js';
 
 const router = Router();
 
@@ -11,66 +11,80 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Category name and skill name are required' });
   }
 
-  const conn = await pool.getConnection();
   try {
-    await conn.beginTransaction();
+    let profile = await Profile.findOne();
+    if (!profile) {
+      // Create empty profile if none exists yet
+      profile = new Profile({
+        full_name: 'Anurag Sinha',
+        skills: []
+      });
+    }
 
-    // Check if category exists
-    const [categories] = await conn.query(
-      'SELECT id FROM skill_categories WHERE LOWER(category_name) = ?',
-      [category_name.toLowerCase()]
+    // Find category case-insensitive
+    let category = profile.skills.find(
+      c => c.category_name.toLowerCase() === category_name.toLowerCase()
     );
 
-    let categoryId;
-    if (categories.length > 0) {
-      categoryId = categories[0].id;
-    } else {
-      // Create new category
-      const [newCat] = await conn.query(
-        'INSERT INTO skill_categories (category_name, display_order) VALUES (?, ?)',
-        [category_name.trim(), 99] // Use high default display order
-      );
-      categoryId = newCat.insertId;
+    if (!category) {
+      // Create category
+      profile.skills.push({
+        category_name: category_name.trim(),
+        display_order: 99,
+        skills: []
+      });
+      category = profile.skills[profile.skills.length - 1];
     }
 
     // Insert skill
-    const [newSkill] = await conn.query(
-      'INSERT INTO skills (category_id, skill_name, display_order) VALUES (?, ?, ?)',
-      [categoryId, skill_name.trim(), 0]
-    );
+    category.skills.push({ name: skill_name.trim() });
+    await profile.save();
 
-    await conn.commit();
+    // Get the newly created skill ID
+    const addedSkill = category.skills[category.skills.length - 1];
+
     res.status(201).json({ 
       message: 'Skill added successfully', 
-      skillId: newSkill.insertId,
-      categoryId
+      skillId: addedSkill._id,
+      categoryId: category._id
     });
   } catch (err) {
-    await conn.rollback();
-    console.error('Error adding skill:', err);
+    console.error('Error adding skill to MongoDB:', err);
     res.status(500).json({ error: 'Failed to add skill' });
-  } finally {
-    conn.release();
   }
 });
 
 // DELETE /api/skills/:id - Delete a skill
 router.delete('/:id', async (req, res) => {
   try {
-    const [result] = await pool.query('DELETE FROM skills WHERE id = ?', [req.params.id]);
-    if (result.affectedRows === 0) {
+    const profile = await Profile.findOne();
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    let skillFound = false;
+
+    // Iterate categories and search/pull the skill
+    for (let c of profile.skills) {
+      const idx = c.skills.findIndex(s => s._id.toString() === req.params.id);
+      if (idx !== -1) {
+        c.skills.splice(idx, 1);
+        skillFound = true;
+        break;
+      }
+    }
+
+    if (!skillFound) {
       return res.status(404).json({ error: 'Skill not found' });
     }
-    
-    // Cleanup empty categories
-    await pool.query(
-      `DELETE FROM skill_categories 
-       WHERE id NOT IN (SELECT DISTINCT category_id FROM skills)`
-    );
 
+    // Cleanup empty categories
+    profile.skills = profile.skills.filter(c => c.skills.length > 0);
+
+    await profile.save();
     res.json({ message: 'Skill deleted successfully' });
   } catch (err) {
-    console.error('Error deleting skill:', err);
+    console.error('Error deleting skill from MongoDB:', err);
     res.status(500).json({ error: 'Failed to delete skill' });
   }
 });

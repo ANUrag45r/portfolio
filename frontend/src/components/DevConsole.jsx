@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { addProject, deleteProject, addSkill, deleteSkill } from '../api.js';
+import AdminMessages from './AdminMessages.jsx';
 
 export default function DevConsole({ profileData, projects, onRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -156,7 +157,7 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
           />
 
           {/* Drawer Body */}
-          <div className="relative w-full max-w-lg bg-paper h-full shadow-2xl flex flex-col z-10 border-l border-line transition-all duration-300">
+          <div className={`relative w-full ${activeTab === 'messages' ? 'max-w-6xl' : 'max-w-lg'} bg-paper h-full shadow-2xl flex flex-col z-10 border-l border-line transition-all duration-300`}>
             {/* Header */}
             <div className="p-5 border-b border-line flex items-center justify-between bg-panel/30">
               <div>
@@ -206,24 +207,30 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
             ) : (
               <div className="flex-grow flex flex-col overflow-hidden">
                 {/* Tabs */}
-                <div className="flex border-b border-line bg-panel/20 font-mono text-xs">
+                <div className="flex border-b border-line bg-panel/20 font-mono text-xs overflow-x-auto">
                   <button
                     onClick={() => { setActiveTab('project'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 py-3 text-center border-r border-line transition-colors ${activeTab === 'project' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 min-w-[70px] py-3 text-center border-r border-line transition-colors ${activeTab === 'project' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     + Project
                   </button>
                   <button
                     onClick={() => { setActiveTab('skill'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 py-3 text-center border-r border-line transition-colors ${activeTab === 'skill' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 min-w-[60px] py-3 text-center border-r border-line transition-colors ${activeTab === 'skill' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     + Skill
                   </button>
                   <button
                     onClick={() => { setActiveTab('manage'); setStatusMsg({ text: '', isError: false }); }}
-                    className={`flex-1 py-3 text-center transition-colors ${activeTab === 'manage' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                    className={`flex-1 min-w-[70px] py-3 text-center border-r border-line transition-colors ${activeTab === 'manage' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
                   >
                     Manage
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab('messages'); setStatusMsg({ text: '', isError: false }); }}
+                    className={`flex-1 min-w-[80px] py-3 text-center transition-colors ${activeTab === 'messages' ? 'bg-paper text-blue font-bold border-b-2 border-b-blue' : 'text-slate hover:text-ink'}`}
+                  >
+                    Messages
                   </button>
                 </div>
 
@@ -571,6 +578,12 @@ export default function DevConsole({ profileData, projects, onRefresh }) {
                           <p className="text-slate">No skills in database.</p>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'messages' && (
+                    <div className="flex-grow overflow-hidden flex flex-col h-full">
+                      <AdminMessages />
                     </div>
                   )}
                 </div>

@@ -12,10 +12,15 @@ import DevConsole from './components/DevConsole.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import AnalyticsTracker from './components/AnalyticsTracker.jsx';
 import AnalyticsDashboard from './components/AnalyticsDashboard.jsx';
+import AdminMessages from './components/AdminMessages.jsx';
 import { fetchProfile, fetchProjects } from './api.js';
 import { fallbackProfile, fallbackProjects } from './data/fallbackData.js';
 
 export default function App() {
+  if (window.location.pathname === '/admin/messages') {
+    return <AdminMessages isFullPage={true} />;
+  }
+
   const [data, setData] = useState(fallbackProfile);
   const [projects, setProjects] = useState(fallbackProjects);
   const [usingLiveData, setUsingLiveData] = useState(false);

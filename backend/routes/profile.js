@@ -1,40 +1,49 @@
 import { Router } from 'express';
-import { pool } from '../config/db.js';
+import Profile from '../models/Profile.js';
 
 const router = Router();
 
 // GET /api/profile - everything needed to render the site in one call
 router.get('/', async (req, res) => {
   try {
-    const [[profile]] = await pool.query('SELECT * FROM profile LIMIT 1');
-    const [education] = await pool.query('SELECT * FROM education ORDER BY display_order');
-    const [experience] = await pool.query('SELECT * FROM experience ORDER BY display_order');
-    const [experienceBullets] = await pool.query('SELECT * FROM experience_bullets ORDER BY display_order');
-    const [achievements] = await pool.query('SELECT * FROM achievements ORDER BY display_order');
-    const [skillCategories] = await pool.query('SELECT * FROM skill_categories ORDER BY display_order');
-    const [skills] = await pool.query('SELECT * FROM skills ORDER BY display_order');
-
-    const experienceWithBullets = experience.map(e => ({
-      ...e,
-      bullets: experienceBullets
-        .filter(b => b.experience_id === e.id)
-        .map(b => b.bullet_text)
-    }));
-
-    const skillsWithCategories = skillCategories.map(c => ({
-      ...c,
-      skills: skills.filter(s => s.category_id === c.id).map(s => ({ id: s.id, name: s.skill_name }))
-    }));
+    const profileDoc = await Profile.findOne();
+    if (!profileDoc) {
+      return res.json({
+        profile: null,
+        education: [],
+        experience: [],
+        achievements: [],
+        skills: []
+      });
+    }
 
     res.json({
-      profile,
-      education,
-      experience: experienceWithBullets,
-      achievements,
-      skills: skillsWithCategories
+      profile: {
+        full_name: profileDoc.full_name,
+        tagline: profileDoc.tagline,
+        bio: profileDoc.bio,
+        email: profileDoc.email,
+        phone: profileDoc.phone,
+        location: profileDoc.location,
+        resume_url: profileDoc.resume_url,
+        github_url: profileDoc.github_url,
+        linkedin_url: profileDoc.linkedin_url,
+        leetcode_url: profileDoc.leetcode_url,
+        gfg_url: profileDoc.gfg_url,
+        cgpa: profileDoc.cgpa
+      },
+      education: (profileDoc.education || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
+      experience: (profileDoc.experience || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
+      achievements: profileDoc.achievements || [],
+      skills: (profileDoc.skills || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map(c => ({
+        id: c._id,
+        category_name: c.category_name,
+        display_order: c.display_order,
+        skills: (c.skills || []).map(s => ({ id: s._id, name: s.name }))
+      }))
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching profile from MongoDB:', err);
     res.status(500).json({ error: 'Failed to load profile data' });
   }
 });

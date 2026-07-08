@@ -1,21 +1,49 @@
 import { useState } from 'react';
-import { submitContact } from '../api.js';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import axios from 'axios';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const contactSchema = z.object({
+  name: z.string()
+    .min(2, { message: "Name must be at least 2 characters" })
+    .max(100, { message: "Name cannot exceed 100 characters" }),
+  email: z.string()
+    .email({ message: "Please enter a valid email address" }),
+  message: z.string()
+    .min(10, { message: "Message must be at least 10 characters" })
+    .max(2000, { message: "Message cannot exceed 2000 characters" })
+});
 
 export default function Contact({ profile = {} }) {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState({ state: 'idle', error: '' });
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { name: '', email: '', message: '' }
+  });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setStatus({ state: 'sending', error: '' });
+  const [submitStatus, setSubmitStatus] = useState({ state: 'idle', message: '', error: '' });
+
+  const onSubmit = async (data) => {
+    setSubmitStatus({ state: 'sending', message: '', error: '' });
     try {
-      await submitContact(form);
-      setStatus({ state: 'sent', error: '' });
-      setForm({ name: '', email: '', message: '' });
+      const response = await axios.post(`${API_BASE}/contact`, data);
+      setSubmitStatus({
+        state: 'sent',
+        message: 'Your message has been sent successfully.',
+        error: ''
+      });
+      reset();
     } catch (err) {
-      setStatus({ state: 'error', error: err.message || 'Something went wrong.' });
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to send message. Please try again.';
+      setSubmitStatus({
+        state: 'error',
+        message: '',
+        error: errMsg
+      });
     }
-  }
+  };
 
   // Icons
   const mailIcon = (
@@ -120,49 +148,59 @@ export default function Contact({ profile = {} }) {
 
           {/* Form Column */}
           <form 
-            onSubmit={handleSubmit} 
+            onSubmit={handleSubmit(onSubmit)} 
             className="border border-line/60 bg-[#0d121f]/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl space-y-5 shadow-sm hover:border-blue/30 transition-all duration-300"
           >
             <div>
               <label className="font-mono text-[9px] text-slate/60 tracking-wider uppercase">NAME</label>
               <input
-                required
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full mt-1.5 bg-[#0a0e17]/50 border border-line/50 rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200"
+                {...register('name')}
+                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.name ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
                 placeholder="Your name"
               />
+              {errors.name && (
+                <p className="text-red-500 font-mono text-[10px] mt-1">⚠️ {errors.name.message}</p>
+              )}
             </div>
+            
             <div>
               <label className="font-mono text-[9px] text-slate/60 tracking-wider uppercase">EMAIL</label>
               <input
-                required
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full mt-1.5 bg-[#0a0e17]/50 border border-line/50 rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200"
+                {...register('email')}
+                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.email ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
                 placeholder="you@example.com"
               />
+              {errors.email && (
+                <p className="text-red-500 font-mono text-[10px] mt-1">⚠️ {errors.email.message}</p>
+              )}
             </div>
+
             <div>
               <label className="font-mono text-[9px] text-slate/60 tracking-wider uppercase">MESSAGE</label>
               <textarea
-                required
+                {...register('message')}
                 rows={4}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="w-full mt-1.5 bg-[#0a0e17]/50 border border-line/50 rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none resize-none transition-all duration-200"
+                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.message ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none resize-none transition-all duration-200`}
                 placeholder="What would you like to discuss?"
               />
+              {errors.message && (
+                <p className="text-red-500 font-mono text-[10px] mt-1">⚠️ {errors.message.message}</p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={status.state === 'sending'}
+              disabled={isSubmitting}
               className="group w-full font-mono text-xs bg-blue hover:bg-blue/85 hover:shadow-[0_4px_20px_rgba(59,130,246,0.35)] text-white rounded-lg py-3 px-6 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 font-bold cursor-pointer"
             >
-              {status.state === 'sending' ? (
-                'Sending…'
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <svg className="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Sending…</span>
+                </div>
               ) : (
                 <>
                   <span>Send message</span>
@@ -171,14 +209,14 @@ export default function Contact({ profile = {} }) {
               )}
             </button>
 
-            {status.state === 'sent' && (
-              <p className="font-mono text-xs text-[#10b981] mt-2 flex items-center gap-1.5">
-                <span>✓</span> Message received. Thank you.
+            {submitStatus.state === 'sent' && (
+              <p className="font-mono text-xs text-[#10b981] mt-2 flex items-center gap-1.5 bg-[#10b981]/15 border border-[#10b981]/25 p-3 rounded-lg">
+                <span>✓</span> {submitStatus.message}
               </p>
             )}
-            {status.state === 'error' && (
-              <p className="font-mono text-xs text-red-500 mt-2">
-                ⚠️ {status.error} (Form fell back to email delivery relay.)
+            {submitStatus.state === 'error' && (
+              <p className="font-mono text-xs text-red-400 mt-2 bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
+                ⚠️ {submitStatus.error}
               </p>
             )}
           </form>
