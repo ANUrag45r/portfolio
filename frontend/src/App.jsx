@@ -104,17 +104,7 @@ export default function App() {
         </>
       )}
 
-      {/* Sticky Vertical Left Sidebar (Desktop Only) */}
-      {!showSplash && (
-        <div className="hidden xl:flex flex-col items-center justify-center fixed left-2 top-0 h-screen select-none font-mono z-30 pointer-events-none">
-          <div className="flex flex-col items-center gap-16">
-            <span className="uppercase tracking-[0.25em] -rotate-90 whitespace-nowrap origin-center text-slate/40 text-[9px] font-bold">
-              AI/ML &amp; FULL-STACK ENGINEER
-            </span>
-            <div className="w-[1px] h-32 bg-line/60"></div>
-          </div>
-        </div>
-      )}
+
       
       <div className="min-h-screen">
         <Nav />
