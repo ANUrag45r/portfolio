@@ -2,7 +2,7 @@ export default function Footer({ profile = {} }) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line/30 bg-[#0a0e17] py-10">
+    <footer className="border-t border-line/30 bg-paper py-10">
       <div className="max-w-[850px] mx-auto px-6 md:px-16 flex flex-col gap-6 items-center">
         
         {/* Top: Social Links Badge Stack */}

@@ -107,9 +107,7 @@ export default function DevActivity() {
     ? ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'] // GitHub dark green
     : ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39']; // GitHub light green
 
-  const leetcodeColors = isDark
-    ? ['#161b22', '#3a2412', '#703c1b', '#b85c24', '#f97316'] // LeetCode dark orange
-    : ['#ebedf0', '#ffdca8', '#ffa657', '#e8590c', '#bf4b02']; // LeetCode light orange
+  const leetcodeColors = ['#2d2d2d', '#0e4429', '#006d32', '#26a641', '#39d353'];
 
   if (loading) {
     return (
@@ -160,6 +158,7 @@ export default function DevActivity() {
           title="LeetCode Submissions"
           totalLabel="problems solved"
           profileUrl="https://leetcode.com/u/anurag_sinha_hu/"
+          isLeetcode={true}
         />
       )}
 
