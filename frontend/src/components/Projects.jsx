@@ -28,7 +28,7 @@ export default function Projects({ projects = [], accordionMode = true }) {
   return (
     <section 
       id="projects" 
-      className="relative w-full bg-[#0a0e17] bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] border-y border-line/30 py-24 select-none"
+      className="relative w-full bg-paper border-y border-line/30 py-24 select-none"
     >
       <div className="max-w-[850px] mx-auto px-6 md:px-16 relative">
         {/* Main Content Area */}
@@ -109,17 +109,17 @@ function ProjectCard({ project, isOpen, onToggle }) {
     <motion.div 
       layout
       onClick={!isOpen ? onToggle : undefined}
-      className={`relative border border-line/60 bg-[#0d121f]/45 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 shadow-sm cursor-pointer overflow-hidden ${
-        isOpen ? 'cursor-default border-blue/30 bg-[#0d121f]/80 shadow-[0_4px_30px_rgba(0,0,0,0.15)]' : 'hover:border-blue/45 hover:bg-[#0d121f]/65 hover:shadow-[0_4px_20px_rgba(42,92,219,0.06)]'
+      className={`relative border border-line/60 bg-panel/30 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 shadow-sm cursor-pointer overflow-hidden ${
+        isOpen ? 'cursor-default border-blue/30 bg-panel/75 shadow-[0_4px_30px_rgba(0,0,0,0.15)]' : 'hover:border-blue/45 hover:bg-panel/50 hover:shadow-[0_4px_20px_rgba(42,92,219,0.06)]'
       }`}
     >
       {/* Centered logo reveal landing overlay */}
       <AnimatePresence>
         {isOpen && isIntroRunning && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e17]/85 backdrop-blur-[1px] z-20 pointer-events-none">
+          <div className="absolute inset-0 flex items-center justify-center bg-paper/85 backdrop-blur-[1px] z-20 pointer-events-none">
             <motion.div
               layoutId={`proj-logo-${project.id}`}
-              className="w-24 h-24 rounded-2xl bg-[#141b2e] border-2 border-blue/40 shadow-[0_0_40px_rgba(42,92,219,0.3)] flex items-center justify-center p-4 backdrop-blur-sm"
+              className="w-24 h-24 rounded-2xl bg-panel border-2 border-blue/40 shadow-[0_0_40px_rgba(42,92,219,0.3)] flex items-center justify-center p-4 backdrop-blur-sm"
               initial={{ scale: 1.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}

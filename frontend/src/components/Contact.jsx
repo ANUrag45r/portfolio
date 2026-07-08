@@ -74,7 +74,7 @@ export default function Contact({ profile = {} }) {
   return (
     <section 
       id="contact" 
-      className="relative w-full bg-[#0a0e17] bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] border-t border-line/30 py-24 select-none"
+      className="relative w-full bg-paper border-t border-line/30 py-24 select-none"
     >
       <div className="max-w-[850px] mx-auto px-6 md:px-16 relative">
         
@@ -149,13 +149,13 @@ export default function Contact({ profile = {} }) {
           {/* Form Column */}
           <form 
             onSubmit={handleSubmit(onSubmit)} 
-            className="border border-line/60 bg-[#0d121f]/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl space-y-5 shadow-sm hover:border-blue/30 transition-all duration-300"
+            className="border border-line/60 bg-panel/20 backdrop-blur-sm p-6 sm:p-8 rounded-2xl space-y-5 shadow-sm hover:border-blue/30 transition-all duration-300"
           >
             <div>
               <label className="font-mono text-[9px] text-slate/60 tracking-wider uppercase">NAME</label>
               <input
                 {...register('name')}
-                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.name ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
+                className={`w-full mt-1.5 bg-paper/50 border ${errors.name ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
                 placeholder="Your name"
               />
               {errors.name && (
@@ -167,7 +167,7 @@ export default function Contact({ profile = {} }) {
               <label className="font-mono text-[9px] text-slate/60 tracking-wider uppercase">EMAIL</label>
               <input
                 {...register('email')}
-                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.email ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
+                className={`w-full mt-1.5 bg-paper/50 border ${errors.email ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none transition-all duration-200`}
                 placeholder="you@example.com"
               />
               {errors.email && (
@@ -180,7 +180,7 @@ export default function Contact({ profile = {} }) {
               <textarea
                 {...register('message')}
                 rows={4}
-                className={`w-full mt-1.5 bg-[#0a0e17]/50 border ${errors.message ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none resize-none transition-all duration-200`}
+                className={`w-full mt-1.5 bg-paper/50 border ${errors.message ? 'border-red-500' : 'border-line/50'} rounded-lg px-4 py-3 text-xs md:text-sm text-ink placeholder-slate/40 focus:border-blue focus:shadow-[0_0_12px_rgba(59,130,246,0.15)] outline-none resize-none transition-all duration-200`}
                 placeholder="What would you like to discuss?"
               />
               {errors.message && (
