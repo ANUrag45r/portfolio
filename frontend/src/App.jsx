@@ -10,6 +10,7 @@ import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import DevConsole from './components/DevConsole.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
+import AnalyticsTracker from './components/AnalyticsTracker.jsx';
 import { fetchProfile, fetchProjects } from './api.js';
 import { fallbackProfile, fallbackProjects } from './data/fallbackData.js';
 
@@ -125,6 +126,8 @@ export default function App() {
           projects={projects} 
           onRefresh={loadData} 
         />
+
+        <AnalyticsTracker />
 
         {!usingLiveData && (
           <div className="fixed bottom-4 right-4 font-mono text-[10px] bg-ink text-paper px-3 py-2 opacity-80 z-40">
